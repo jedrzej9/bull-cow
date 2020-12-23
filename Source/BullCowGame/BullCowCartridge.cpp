@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "BullCowCartridge.h"
+#include "HiddenWordList.h"
 
 void UBullCowCartridge::BeginPlay() // When the game starts
 {
@@ -8,6 +9,8 @@ void UBullCowCartridge::BeginPlay() // When the game starts
     SetupGame();
 
     PrintLine(TEXT("The HiddenWord is %s."), *HiddenWord); //Debug line
+
+    PrintLine(TEXT("%d"), IsIsogram(HiddenWord));
 }
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
@@ -78,4 +81,19 @@ void UBullCowCartridge::ProccessGuess(FString Guess)
         PrintLine(TEXT("The hidden word was %s."), *HiddenWord);
         EndGame();
     }
+}
+
+bool UBullCowCartridge::IsIsogram(FString Word) const
+{
+    for (int32 startingPoint = 0; startingPoint < Word.Len(); startingPoint++)
+    {
+        for (int32 i = startingPoint + 1; i < Word.Len(); i++)
+        {
+            if (Word[startingPoint] == Word[startingPoint + 1])
+            {
+                return false;
+            }
+        }
+    }
+    return true;
 }
