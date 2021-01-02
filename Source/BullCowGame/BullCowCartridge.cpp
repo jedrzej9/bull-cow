@@ -70,7 +70,7 @@ void UBullCowCartridge::ProccessGuess(const FString& Guess)
         return;
     }
 
-    Lives--;
+    Lives--; //Remove life
 
     if ((HiddenWord.Len() == Guess.Len()) && Lives > 0)
     {
@@ -85,6 +85,11 @@ void UBullCowCartridge::ProccessGuess(const FString& Guess)
         PrintLine(TEXT("The hidden word was %s."), *HiddenWord);
         EndGame();
     }
+
+    int32 Bulls = 0, Cows = 0;
+    GetBullCows(Guess, Bulls, Cows);
+
+    PrintLine(TEXT("You have %i bulls and %i cows"), Bulls, Cows);
 }
 
 bool UBullCowCartridge::IsIsogram(const FString& Word) const
@@ -115,4 +120,28 @@ TArray<FString> UBullCowCartridge::GetValidWords(const TArray<FString>& Words) c
     }
 
     return ValidWords;
+}
+
+void UBullCowCartridge::GetBullCows(const FString& Guess, int32 BullCount, int32& CowCount) const
+{
+    BullCount = 0;
+    CowCount = 0;
+
+    for (int32 i = 0; i < Guess.Len(); i++)
+    {
+        if (Guess[i] == HiddenWord[i])
+        {
+            BullCount++;
+            continue;
+        }
+
+        for (int32 j = 0; j < HiddenWord.Len(); j++)
+        {
+            if (Guess[i] == HiddenWord[j]) 
+            {
+                CowCount++;
+                break;
+            }
+        }
+    }
 }
